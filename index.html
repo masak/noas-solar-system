@@ -18,12 +18,14 @@
         }
     </style>
 </head>
-<!--
-    In order to make en element respond to clicks, iOS Safari needs an `onclick` attribute.
-    See https://stackoverflow.com/questions/24627542/ipad-click-works-on-ipad-on-safari/24858547#24858547
--->
-<body onclick="">
-    <svg id="drawing" viewbox="0 0 100 100"></svg>
+<body>
+    <!--
+        In order to make en element respond to clicks, iOS Safari needs an `onclick` attribute.
+        See https://stackoverflow.com/questions/24627542/ipad-click-works-on-ipad-on-safari/24858547#24858547
+    -->
+    <svg id="drawing" viewbox="0 0 100 100" onclick="">
+
+    </svg>
 </body>
 
 <script>
@@ -130,7 +132,7 @@
         }
     }
 
-    document.body.addEventListener("click", () => {
+    drawing.addEventListener("click", () => {
         ++drawingState;
     });
 
