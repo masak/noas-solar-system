@@ -173,9 +173,12 @@
     let modelUpdates = [];
 
     function zoomToOuterPlanets() {
-        modelUpdates.push(() => {
+        modelUpdates.push((dispose) => {
             if (zoomState < 100) {
                 zoomState += 5;
+            }
+            else {
+                dispose();
             }
         });
     }
@@ -190,9 +193,11 @@
 
     let intervalToken = setInterval(() => {
         ++time;
-        for (let update of modelUpdates) {
-            update();
-        }
+        moelUpdates = modelUpdates.filter((update) => {
+            let retain = true;
+            update(() => { retain = false; });
+            return retain;
+        });
         drawAll();
     }, 250);
 </script>
