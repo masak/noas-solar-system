@@ -23,7 +23,7 @@
         In order to make en element respond to clicks, iOS Safari needs an `onclick` attribute.
         See https://stackoverflow.com/questions/24627542/ipad-click-works-on-ipad-on-safari/24858547#24858547
     -->
-    <svg id="drawing" viewbox="0 0 100 100" onclick="">
+    <svg id="drawing" viewbox="0 30 20 30" onclick="">
 
     </svg>
 </body>
@@ -45,12 +45,16 @@
     let sunVisible = false;
     let planetVisible = [false, false, false, false, false, false, false, false];
 
+    const INNER_PLANETS_VIEWBOX = [0, 30, 20, 30];
+    const OUTER_PLANETS_VIEWBOX = [0, 0, 100, 100];
+
     const clickActions = [
         () => { sunVisible = true },
         () => { planetVisible[MERCURY] = true },
         () => { planetVisible[VENUS] = true },
         () => { planetVisible[EARTH] = true },
         () => { planetVisible[MARS] = true },
+        zoomToOuterPlanets,
         () => { planetVisible[JUPITER] = true },
         () => { planetVisible[SATURN] = true },
         () => { planetVisible[URANUS] = true },
@@ -78,8 +82,18 @@
         drawing.appendChild(item);
     }
 
+    function interpolateViewBox(vbStart, vbEnd, t) {
+        return [
+            (1 - t) * vbStart[0] + t * vbEnd[0],
+            (1 - t) * vbStart[1] + t * vbEnd[1],
+            (1 - t) * vbStart[2] + t * vbEnd[2],
+            (1 - t) * vbStart[3] + t * vbEnd[3],
+        ];
+    }
+
     let clickState = 0;
     let time = -100;
+    let zoomState = 0;
 
     const SUN_X = -10;
     const SUN_Y = 50;
@@ -90,6 +104,8 @@
 
     function drawAll() {
         drawing.innerHTML = "";
+        let viewBox = interpolateViewBox(INNER_PLANETS_VIEWBOX, OUTER_PLANETS_VIEWBOX, zoomState / 100);
+        drawing.setAttribute("viewBox", viewBox.join(" "));
         addItem("text", {
             x: 10,
             y: 10,
@@ -154,6 +170,16 @@
         }
     }
 
+    let modelUpdates = [];
+
+    function zoomToOuterPlanets() {
+        modelUpdates.push(() => {
+            if (zoomState < 100) {
+                zoomState += 5;
+            }
+        });
+    }
+
     drawing.addEventListener("click", () => {
         let action = clickActions[clickState];
         if (action) {
@@ -164,6 +190,9 @@
 
     let intervalToken = setInterval(() => {
         ++time;
+        for (let update of modelUpdates) {
+            update();
+        }
         drawAll();
     }, 250);
 </script>
