@@ -176,7 +176,7 @@
     function zoomToOuterPlanets() {
         modelUpdates.push((dispose) => {
             if (zoomState < 100) {
-                zoomState += 5;
+                zoomState += 2;
             }
             else {
                 dispose();
@@ -199,6 +199,6 @@
             return retain;
         });
         drawAll();
-    }, 250);
+    }, 100);
 </script>
 </html>
