@@ -92,8 +92,8 @@
     }
 
     let clickState = 0;
-    let time = -100;
     let zoomState = 0;
+    let startTime = Date.now();
 
     const SUN_X = -10;
     const SUN_Y = 50;
@@ -103,6 +103,7 @@
     const DISTANCE_FACTOR = 1.45;
 
     function drawAll() {
+        let time = (Date.now() - startTime) / 250 - 100;
         drawing.innerHTML = "";
         let viewBox = interpolateViewBox(INNER_PLANETS_VIEWBOX, OUTER_PLANETS_VIEWBOX, zoomState / 100);
         drawing.setAttribute("viewBox", viewBox.join(" "));
@@ -192,7 +193,6 @@
     });
 
     let intervalToken = setInterval(() => {
-        ++time;
         moelUpdates = modelUpdates.filter((update) => {
             let retain = true;
             update(() => { retain = false; });
