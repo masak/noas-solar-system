@@ -64,11 +64,12 @@
     let drawingState = 0;
     let time = -100;
 
-    const SUN_X = -25;
+    const SUN_X = -10;
     const SUN_Y = 50;
     const SUN_R = 7;
     const SUN_FILL = "#fa3";
     const BASE_DISTANCE = 10;
+    const DISTANCE_FACTOR = 1.5;
 
     function drawAll() {
         drawing.innerHTML = "";
@@ -96,7 +97,7 @@
             addItem("circle", {
                 cx: SUN_X,
                 cy: SUN_Y,
-                r: BASE_DISTANCE + 2 * distance,
+                r: BASE_DISTANCE + DISTANCE_FACTOR * distance,
                 style: {
                     fill: "none",
                     stroke: "#aaa",
@@ -104,8 +105,8 @@
                     strokeDasharray: "0.5,0.5",
                 },
             });
-            let cx = SUN_X + (BASE_DISTANCE + 2 * distance) * Math.cos(time * speed);
-            let cy = SUN_Y - (BASE_DISTANCE + 2 * distance) * Math.sin(time * speed);
+            let cx = SUN_X + (BASE_DISTANCE + DISTANCE_FACTOR * distance) * Math.cos(time * speed);
+            let cy = SUN_Y - (BASE_DISTANCE + DISTANCE_FACTOR * distance) * Math.sin(time * speed);
             addItem("circle", {
                 cx,
                 cy,
