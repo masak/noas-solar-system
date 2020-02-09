@@ -64,6 +64,12 @@
     let drawingState = 0;
     let time = -100;
 
+    const SUN_X = -25;
+    const SUN_Y = 50;
+    const SUN_R = 7;
+    const SUN_FILL = "#fa3";
+    const BASE_DISTANCE = 10;
+
     function drawAll() {
         drawing.innerHTML = "";
         addItem("text", {
@@ -72,11 +78,11 @@
         }, "Noa's Solar System");
         if (drawingState > 0) {
             addItem("circle", {
-                cx: -25,
-                cy: 50,
-                r: 7,
+                cx: SUN_X,
+                cy: SUN_Y,
+                r: SUN_R,
                 style: {
-                    fill: "#fa3",
+                    fill: SUN_FILL,
                 },
             });
         }
@@ -88,9 +94,9 @@
             let [symbol, name, size, distance, color, period] = planet;
             let speed = 50 / period;
             addItem("circle", {
-                cx: -25,
-                cy: 50,
-                r: 10 + 2 * distance,
+                cx: SUN_X,
+                cy: SUN_Y,
+                r: BASE_DISTANCE + 2 * distance,
                 style: {
                     fill: "none",
                     stroke: "#aaa",
@@ -98,8 +104,8 @@
                     strokeDasharray: "0.5,0.5",
                 },
             });
-            let cx = -25 + (10 + 2 * distance) * Math.cos(time * speed);
-            let cy = 50 - (10 + 2 * distance) * Math.sin(time * speed);
+            let cx = SUN_X + (BASE_DISTANCE + 2 * distance) * Math.cos(time * speed);
+            let cy = SUN_Y - (BASE_DISTANCE + 2 * distance) * Math.sin(time * speed);
             addItem("circle", {
                 cx,
                 cy,
