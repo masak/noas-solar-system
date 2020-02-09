@@ -65,7 +65,7 @@
     let svgXmlNs = "http://www.w3.org/2000/svg";
 
     function addItem(name, attrs, childText) {
-        var item = document.createElementNS(svgXmlNs, name);
+        let item = document.createElementNS(svgXmlNs, name);
         for (let [attrName, attrValue] of Object.entries(attrs)) {
             if (attrName === "style") {
                 for (let [styleName, styleValue] of Object.entries(attrValue)) {
