@@ -48,7 +48,7 @@
     const INNER_PLANETS_VIEWBOX = [-30, 20, 40, 60];
     const OUTER_PLANETS_VIEWBOX = [0, 0, 100, 100];
 
-    const clickActions = [
+    let clickActions = [
         () => { sunVisible = true },
         () => { planetVisible[MERCURY] = true },
         () => { planetVisible[VENUS] = true },
@@ -91,7 +91,6 @@
         ];
     }
 
-    let clickState = 0;
     let zoomState = 0;
     let startTime = Date.now();
 
@@ -185,11 +184,11 @@
     }
 
     drawing.addEventListener("click", () => {
-        let action = clickActions[clickState];
-        if (action) {
-            action();
+        if (clickActions.length === 0) {
+            return;
         }
-        ++clickState;
+        let action = clickActions.shift();
+        action();
     });
 
     let intervalToken = setInterval(() => {
