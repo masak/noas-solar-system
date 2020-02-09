@@ -29,15 +29,32 @@
 </body>
 
 <script>
+    const [MERCURY, VENUS, EARTH, MARS, JUPITER, SATURN, URANUS, NEPTUNE]
+        = [0, 1, 2, 3, 4, 5, 6, 7];
     const planetTable = [
-        ["☿", "Mercury", 0.38, 1, "#863", 87.97],
-        ["♀", "Venus", 0.95, 2, "#880", 224.70],
-        ["⊕", "Earth", 1.00, 2.5, "#88f", 365.26],
-        ["♂", "Mars", 0.53, 4, "#830", 686.98],
-        ["♃", "Jupiter", 11.2, 13, "#cc6", 4332.82],
-        ["♄", "Saturn", 9.50, 24, "#bb7", 10775.70],
-        ["♅", "Uranus", 4.00, 49, "#0cc", 30687.15],
-        ["♆", "Neptune", 3.90, 79, "#02c", 60190.03],
+        [MERCURY, "☿", "Mercury", 0.38, 1, "#863", 87.97],
+        [VENUS, "♀", "Venus", 0.95, 2, "#880", 224.70],
+        [EARTH, "⊕", "Earth", 1.00, 2.5, "#88f", 365.26],
+        [MARS, "♂", "Mars", 0.53, 4, "#830", 686.98],
+        [JUPITER, "♃", "Jupiter", 11.2, 13, "#cc6", 4332.82],
+        [SATURN, "♄", "Saturn", 9.50, 24, "#bb7", 10775.70],
+        [URANUS, "♅", "Uranus", 4.00, 49, "#0cc", 30687.15],
+        [NEPTUNE, "♆", "Neptune", 3.90, 79, "#02c", 60190.03],
+    ];
+
+    let sunVisible = false;
+    let planetVisible = [false, false, false, false, false, false, false, false];
+
+    const clickActions = [
+        () => { sunVisible = true },
+        () => { planetVisible[MERCURY] = true },
+        () => { planetVisible[VENUS] = true },
+        () => { planetVisible[EARTH] = true },
+        () => { planetVisible[MARS] = true },
+        () => { planetVisible[JUPITER] = true },
+        () => { planetVisible[SATURN] = true },
+        () => { planetVisible[URANUS] = true },
+        () => { planetVisible[NEPTUNE] = true },
     ];
 
     let drawing = document.getElementById("drawing");
@@ -61,7 +78,7 @@
         drawing.appendChild(item);
     }
 
-    let drawingState = 0;
+    let clickState = 0;
     let time = -100;
 
     const SUN_X = -10;
@@ -77,7 +94,7 @@
             x: 10,
             y: 10,
         }, "Noa's Solar System");
-        if (drawingState > 0) {
+        if (sunVisible) {
             addItem("circle", {
                 cx: SUN_X,
                 cy: SUN_Y,
@@ -87,12 +104,11 @@
                 },
             });
         }
-        let planetIndex = 1;
         for (let planet of planetTable) {
-            if (planetIndex >= drawingState) {
-                break;
+            let [index, symbol, name, size, distance, color, period] = planet;
+            if (!planetVisible[index]) {
+                continue;
             }
-            let [symbol, name, size, distance, color, period] = planet;
             let speed = 50 / period;
             addItem("circle", {
                 cx: SUN_X,
@@ -115,7 +131,7 @@
                     fill: color,
                 },
             });
-            let textSize = planetIndex <= 4
+            let textSize = index <= 4
                 ? 2
                 : 6;
             addItem("text", {
@@ -135,12 +151,15 @@
                     textAnchor: "middle",
                 },
             }, symbol);
-            ++planetIndex;
         }
     }
 
     drawing.addEventListener("click", () => {
-        ++drawingState;
+        let action = clickActions[clickState];
+        if (action) {
+            action();
+        }
+        ++clickState;
     });
 
     let intervalToken = setInterval(() => {
