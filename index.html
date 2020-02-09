@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noa's solar system</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        svg {
+            width: 100%;
+            height: 100vh;
+            font: normal 10px serif;
+        }
+    </style>
+</head>
+<body>
+    <svg id="drawing" viewbox="0 0 100 100"></svg>
+</body>
+
+<script>
+    let planetTable = [
+        ["☿", "Mercury", 0.38, 1, "#863", 87.97],
+        ["♀", "Venus", 0.95, 2, "#880", 224.70],
+        ["🜨", "Earth", 1.00, 2.5, "#88f", 365.26],
+        ["♂", "Mars", 0.53, 4, "#830", 686.98],
+        ["♃", "Jupiter", 11.2, 13, "#cc6", 4332.82],
+        ["♄", "Saturn", 9.50, 24, "#bb7", 10775.70],
+        ["♅", "Uranus", 4.00, 49, "#0cc", 30687.15],
+        ["♆", "Neptune", 3.90, 79, "#02c", 60190.03],
+    ];
+
+    let drawing = document.getElementById("drawing");
+    let svgXmlNs = "http://www.w3.org/2000/svg";
+
+    function addItem(name, attrs, childText) {
+        var item = document.createElementNS(svgXmlNs, name);
+        for (let [attrName, attrValue] of Object.entries(attrs)) {
+            if (attrName === "style") {
+                for (let [styleName, styleValue] of Object.entries(attrValue)) {
+                    item.style[styleName] = styleValue;
+                }
+            }
+            else {
+                item.setAttributeNS(null, attrName, String(attrValue));
+            }
+        }
+        if (childText) {
+            item.appendChild(document.createTextNode(childText));
+        }
+        drawing.appendChild(item);
+    }
+
+    let drawingState = 0;
+    let time = -100;
+
+    function drawAll() {
+        drawing.innerHTML = "";
+        addItem("text", {
+            x: 10,
+            y: 10,
+        }, "Noa's Solar System");
+        if (drawingState > 0) {
+            addItem("circle", {
+                cx: -25,
+                cy: 50,
+                r: 7,
+                style: {
+                    fill: "#fa3",
+                },
+            });
+        }
+        let planetIndex = 1;
+        for (let planet of planetTable) {
+            if (planetIndex >= drawingState) {
+                break;
+            }
+            let [symbol, name, size, distance, color, period] = planet;
+            let speed = 50 / period;
+            addItem("circle", {
+                cx: -25,
+                cy: 50,
+                r: 10 + 2 * distance,
+                style: {
+                    fill: "none",
+                    stroke: "#aaa",
+                    strokeWidth: "0.1",
+                    strokeDasharray: "0.5,0.5",
+                },
+            });
+            let cx = -25 + (10 + 2 * distance) * Math.cos(time * speed);
+            let cy = 50 - (10 + 2 * distance) * Math.sin(time * speed);
+            addItem("circle", {
+                cx,
+                cy,
+                r: size / 2,
+                style: {
+                    fill: color,
+                },
+            });
+            let textSize = planetIndex <= 4
+                ? 2
+                : 6;
+            addItem("text", {
+                x: cx,
+                y: cy - size / 2 - textSize / 2,
+                style: {
+                    font: `italic ${textSize}px serif`,
+                    textAnchor: "middle",
+                    fill: color,
+                },
+            }, name);
+            addItem("text", {
+                x: cx,
+                y: cy + size / 2 + textSize,
+                style: {
+                    font: `normal ${textSize}px sans-serif`,
+                    textAnchor: "middle",
+                },
+            }, symbol);
+            ++planetIndex;
+        }
+    }
+
+    document.body.addEventListener("click", () => {
+        ++drawingState;
+    });
+
+    let intervalToken = setInterval(() => {
+        ++time;
+        drawAll();
+    }, 250);
+</script>
+</html>
