@@ -23,7 +23,7 @@
         In order to make en element respond to clicks, iOS Safari needs an `onclick` attribute.
         See https://stackoverflow.com/questions/24627542/ipad-click-works-on-ipad-on-safari/24858547#24858547
     -->
-    <svg id="drawing" viewbox="0 30 20 30" onclick="">
+    <svg id="drawing" viewbox="-30 20 40 60" onclick="">
 
     </svg>
 </body>
@@ -45,7 +45,7 @@
     let sunVisible = false;
     let planetVisible = [false, false, false, false, false, false, false, false];
 
-    const INNER_PLANETS_VIEWBOX = [0, 30, 20, 30];
+    const INNER_PLANETS_VIEWBOX = [-30, 20, 40, 60];
     const OUTER_PLANETS_VIEWBOX = [0, 0, 100, 100];
 
     const clickActions = [
